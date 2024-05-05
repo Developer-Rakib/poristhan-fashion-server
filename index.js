@@ -27,7 +27,7 @@ app.use(express.json())
 // }
 
 
-const uri = `mongodb+srv://tajulislam601:rakib601@cluster0.sj400.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.sj400.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 // const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.nbflg.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
