@@ -82,12 +82,22 @@ async function run() {
         app.get('/orders/:sellerName', async (req, res) => {
             const sellerName = req.params.sellerName;
             const bookingDate = req.query.bookingDate;
-            const fiter = {
-                sellerName: sellerName,
-                bookingDate: bookingDate
-            };
-            const result = await OrderCollection.find(fiter).toArray()
-            res.send(result)
+            if (sellerName === "all") {
+
+                const fiter = {
+                    bookingDate: bookingDate
+                };
+                const result = await OrderCollection.find(fiter).toArray()
+                res.send(result)
+            }
+            else {
+                const fiter = {
+                    sellerName: sellerName,
+                    bookingDate: bookingDate
+                };
+                const result = await OrderCollection.find(fiter).toArray()
+                res.send(result)
+            }
         })
 
         // // post orders 
