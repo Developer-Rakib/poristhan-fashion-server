@@ -190,31 +190,53 @@ async function run() {
         })
 
 
+        // get role 
+        app.get('/role/:email', async (req, res) => {
+            const userEmail = req.params.email;
+            const user = await UserCollection.findOne({ email: userEmail })
+            // const isAdmin = user.role === 'admin';
+            res.send({ role: user.role })
+        })
+
         // // get admin 
         // app.get('/admin/:email', async (req, res) => {
         //     const userEmail = req.params.email;
         //     const user = await UserCollection.findOne({ email: userEmail })
-        //     const isAdmin = user.roll === 'admin';
+        //     const isAdmin = user.role === 'admin';
         //     res.send({ admin: isAdmin })
         // })
 
+        // Edit Role
+        app.put("/user/editRole/:email", async (req, res) => {
+            const email = req.params.email;
+            const user = req.body;
+            const filter = { email: email };
+            const updateDoc = {
+                $set: { role: user.role }
+            };
+            const result = await UserCollection.updateOne(filter, updateDoc);
+            res.send(result)
+        })
+
+
         // // make admin
-        // app.put("/user/makeAdmin/:email", verifyJwt, verfyAdmin, async (req, res) => {
+        // app.put("/user/makeAdmin/:email", verfyAdmin, async (req, res) => {
         //     const email = req.params.email;
         //     const filter = { email: email };
         //     const updateDoc = {
-        //         $set: { roll: 'admin' }
+        //         $set: { role: 'admin' }
         //     };
         //     const result = await UserCollection.updateOne(filter, updateDoc);
         //     res.send(result)
         // })
+
         // // delete admin
-        // app.put("/user/deleteAdmin/:email", verifyJwt, verfyAdmin, async (req, res) => {
+        // app.put("/user/deleteAdmin/:email", verfyAdmin, async (req, res) => {
         //     const email = req.params.email;
         //     const filter = { email: email };
         //     const options = { upsert: true };
         //     const updateDoc = {
-        //         $set: { roll: '' }
+        //         $set: { role: '' }
         //     };
         //     const result = await UserCollection.updateOne(filter, updateDoc, options);
         //     res.send(result)
@@ -222,16 +244,16 @@ async function run() {
 
 
 
-        // async function verfyAdmin(req, res, next) {
-        //     const requisterEmail = req.decoded.email;
-        //     const requister = await UserCollection.findOne({ email: requisterEmail })
-        //     if (requister.roll === "admin") {
-        //         next()
-        //     }
-        //     else {
-        //         res.status(403).send({ message: 'forbidden' })
-        //     }
-        // }
+        async function verfyAdmin(req, res, next) {
+            const requisterEmail = req.decoded.email;
+            const requister = await UserCollection.findOne({ email: requisterEmail })
+            if (requister.role === "admin") {
+                next()
+            }
+            else {
+                res.status(403).send({ message: 'forbidden' })
+            }
+        }
 
         // create payment 
         // app.post("/create-payment-intent", async (req, res) => {
