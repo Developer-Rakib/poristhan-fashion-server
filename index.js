@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 require('dotenv').config();
-const port = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 // middleware 
@@ -44,10 +44,25 @@ async function run() {
             const result = await OrderCollection.find(query).toArray();
             res.send(result)
         })
+
+
+
         // get order by memo no.
         app.get('/order/:value', async (req, res) => {
             const value = req.params.value;
-            if (value.length === 8) {
+
+            if (value.length === 11) {
+                const filterID = { recipient_phone: value };
+                const result = await OrderCollection.find(filterID).toArray();
+                if (result.length > 0) {
+                    res.send({ success: true, result })
+                }
+                else {
+                    res.send({ success: false, message: `${value} phone number not found!` })
+
+                }
+
+            } else if (value.length === 8) {
                 const filterID = { bookingID: value };
                 const result = await OrderCollection.findOne(filterID)
                 if (!result) {
@@ -433,4 +448,4 @@ run().catch(console.dir)
 
 
 app.get('/', (req, res) => res.send('Welcome to Poristhan Fashion'))
-app.listen(port, () => console.log('Port is', port))
+app.listen(PORT, () => console.log('Port is', PORT))
