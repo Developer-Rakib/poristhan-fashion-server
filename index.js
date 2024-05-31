@@ -37,6 +37,7 @@ async function run() {
         const OrderCollection = client.db("poristhanFashion").collection("orders");
         const MemoCollection = client.db("poristhanFashion").collection("memoSerials");
         const UserCollection = client.db("poristhanFashion").collection("users");
+        const MarchentNameCollection = client.db("poristhanFashion").collection("marchentName");
 
         // get all orders
         app.get('/orders', async (req, res) => {
@@ -140,7 +141,7 @@ async function run() {
 
         })
 
-        // update entry 
+        // update entry by id
         app.put("/order/update/:id", async (req, res) => {
             const id = req.params.id;
             const filter = { _id: ObjectId(id) };
@@ -151,6 +152,20 @@ async function run() {
             const result = await OrderCollection.updateOne(filter, updateDoc);
             res.send(result)
         })
+        // // update entry by memo
+        // app.put("/order/update/:id", async (req, res) => {
+        //     const id = req.params.id;
+        //     const filter = { _id: ObjectId(id) };
+        //     const orderInfo = req.body;
+        //     const updateDoc = {
+        //         $set: orderInfo
+        //     };
+        //     const result = await OrderCollection.updateOne(filter, updateDoc);
+        //     res.send(result)
+        // })
+
+
+
 
         // delete order 
         app.delete('/order/:id', async (req, res) => {
@@ -181,6 +196,28 @@ async function run() {
             const result = await MemoCollection.updateOne(filter, updateDoc);
             res.send(result)
         })
+
+
+        // marchentName 
+        app.get('/marchentName', async (req, res) => {
+            const query = {};
+            const result = await MarchentNameCollection.find(query).toArray();
+            res.send(result)
+        })
+
+        // update marchent name 
+        app.put("/changeMarchentName/:id", async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const marchentName = req.body;
+            const updateDoc = {
+                $set: marchentName
+            };
+            const result = await MarchentNameCollection.updateOne(filter, updateDoc);
+            res.send(result)
+        })
+
+
 
 
         //  create user
